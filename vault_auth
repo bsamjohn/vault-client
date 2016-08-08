@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export VAULT_ADDR='https://vault.moveaws.com'
+
+if [ -z $1 ]; then 
+  echo "Please provide token as a parameter"
+  exit 1
+fi
+echo vault auth -address=$VAULT_BASE_URL $1
+vault auth -address=$VAULT_BASE_URL $1

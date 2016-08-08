@@ -1,0 +1,18 @@
+#!/bin/sh
+
+export VAULT_ADDR='https://vault.moveaws.com'
+
+if [ -z $1 ]; then 
+  echo "Please allocate vault token and pass it as first param"
+  exit 1
+fi
+
+if [ -z $2 ]
+then
+  echo "Please provide key name to read"
+  exit 1
+fi
+
+echo "curl -s -H "X-Vault-Token: $1" -X GET $VAULT_BASE_URL/v1/$2 | jq -r .data.value"
+
+curl -s -H "X-Vault-Token: $1" -X GET $VAULT_BASE_URL/v1/$2 | jq -r .data.value

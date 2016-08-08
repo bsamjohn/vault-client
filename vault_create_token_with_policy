@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export VAULT_ADDR='https://vault.moveaws.com'
+
+if [ -z $1 ]; then 
+ echo "Please provide policy name"
+ exit 1
+fi
+
+TTL=1h
+
+echo vault token-create -address=$VAULT_BASE_URL -policy="$1" -lease="$TTL"
+vault token-create -address=$VAULT_BASE_URL -policy="$1" -lease="$TTL"

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+export VAULT_ADDR='https://vault.moveaws.com'
+
+if [ -z $1 ]; then 
+  echo "Please provide policy name"
+  echo "$0 <policy name> <file containing policy>"
+  exit 1
+fi
+
+if [ -z $2 ]; then
+  echo "Please provide path to file containing policy"
+  echo "$0 <policy name> <file containing policy>"
+  exit 1
+fi
+
+echo vault policy-write --address="$VAULT_BASE_URL" $1 $2
+vault policy-write --address="$VAULT_BASE_URL" $1 $2

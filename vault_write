@@ -1,0 +1,16 @@
+#!/bin/bash
+
+export VAULT_ADDR='https://vault.moveaws.com'
+
+if [ -z $1 ]; then 
+  echo "Please provide key as a param in form  secret/project/keyname"
+  exit 1
+fi
+
+if [ -z $2 ]; then
+  echo "Please provide value for $1"
+  exit 1
+fi
+
+echo "vault write -address=$VAULT_BASE_URL $1 value=$2"
+vault write -address=$VAULT_BASE_URL $1 value="$2"
