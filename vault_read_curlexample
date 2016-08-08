@@ -13,6 +13,6 @@ then
   exit 1
 fi
 
-echo "curl -s -H "X-Vault-Token: $1" -X GET $VAULT_BASE_URL/v1/$2 | jq -r .data.value"
+echo "curl -s -H "X-Vault-Token: $1" -X GET $VAULT_ADDR/v1/$2 | jq -r .data.value"
 
-curl -s -H "X-Vault-Token: $1" -X GET $VAULT_BASE_URL/v1/$2 | jq -r .data.value
+curl -s -H "X-Vault-Token: $1" -X GET $VAULT_ADDR/v1/$2 | jq -r .data.value

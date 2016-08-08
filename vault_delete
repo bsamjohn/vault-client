@@ -6,5 +6,5 @@ if [ -z "$1" ]; then
   echo "Plese provide key to delete as a param in form  secret/project/keyname"
   exit 1
 fi
-echo "vault delete -address=$VAULT_BASE_URL $1"
-vault delete -address=$VAULT_BASE_URL $1
+echo "vault delete -address=$VAULT_ADDR $1"
+vault delete -address=$VAULT_ADDR $1

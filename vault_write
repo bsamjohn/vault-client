@@ -12,5 +12,5 @@ if [ -z $2 ]; then
   exit 1
 fi
 
-echo "vault write -address=$VAULT_BASE_URL $1 value=$2"
-vault write -address=$VAULT_BASE_URL $1 value="$2"
+echo "vault write -address=$VAULT_ADDR $1 value=$2"
+vault write -address=$VAULT_ADDR $1 value="$2"

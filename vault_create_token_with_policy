@@ -7,7 +7,5 @@ if [ -z $1 ]; then
  exit 1
 fi
 
-TTL=1h
-
-echo vault token-create -address=$VAULT_BASE_URL -policy="$1" -lease="$TTL"
-vault token-create -address=$VAULT_BASE_URL -policy="$1" -lease="$TTL"
+echo vault token-create -address=$VAULT_ADDR -policy="$1" 
+vault token-create -address=$VAULT_ADDR -policy="$1" 
