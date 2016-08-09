@@ -1,6 +1,3 @@
-Using Vault by HashiCorp to secure your deployment secrets
-=======================================
-
 # Installing vault client
 
 Run the below vaultclient-setup.sh script to download and place the vault binary in /usr/bin folder:
@@ -9,12 +6,13 @@ $ git clone git@github.move.com:IT-Operations/vault-client.git
 $ cd vault-client
 $ sudo ./vaultclient-setup.sh 
 </pre>
-Note: This script also places an environment variable "export VAULT_ADDR='https://vault.moveaws.com'" in .bashrc, so you don't have to export it every time.
+Note: This script also places an environment variable "VAULT_ADDR='https://vault.moveaws.com'" in .bashrc, so you don't have to export it every time.
 
 # Check the installation:
 To verify installation, run the "vault status" command and you should see an output like the one given below:
 
 <pre>
+$ export VAULT_ADDR='https://vault.moveaws.com'
 $ vault status
 Sealed: false
 Key Shares: 1
@@ -27,34 +25,36 @@ $
 
 # Using vault
 
-## Unsealing
-When a Vault server is started, it starts in a sealed state. Unsealing is the process of constructing the master key necessary to read the decryption key to decrypt the data, thus prior to unsealing, almost no operations are possible with Vault.
+## Authorization using the token
+In order to perform any operation in vault, you should first identify yourself by providing the token that corresponds to your app's key(s) path. 
 
-Let's unseal:
+Use the vault_auth command to do this by providing your token
+
+Set the VAULT_TOKEN environment variable
 <pre>
-./vault_unseal Unseal_Key
-Sealed: false
-Key Shares: 1
-Key Threshold: 1
-Unseal Progress: 0
+$export VAULT_TOKEN=728c82be-1f1c-e945-1bb9-xxxxxxx
 </pre>
 
-Note, if you had higher threshold set, all the key holders would need to perform unseal operation with their parts of the key.  That's provides additional level of security for accessing the data
-
-## Authorization
-In order to continue working with vault, you should first identify yourself.
-Let's use auth command to do this by providing our initial root token
-
 <pre>
-./vault_ auth 98df443c-65ee-d843-7f4b-9af8c426128a
-Successfully authenticated! The policies that are associated
-with this token are listed below:
-
-root
-
+$ ./vault_auth 728c82be-1f1c-e945-1bb9-xxxxxxx
+vault auth -address=https://vault.moveaws.com 728c82be-1f1c-e945-1bb9-xxxxxxx
+Successfully authenticated! You are now logged in.
+token: 728c82be-1f1c-e945-1bb9-xxxxxxx
+token_duration: 2591592
+token_policies: [default, yourapp]
 </pre>
 
-## Policies
+Note: If you are a first time user and don't have a token, contact any of the admins of your github group listed in this wiki page(TODO: define the policy), and provide them the name of your app. They would create a policy which gives you access to your app secret path (/secret/yourapp) and give you the token that has access to that secret path. 
+
+## Write to vault 
+
+Assuming that you now that you have authenticated with a token that has write access to your secret path, you can issue the below command to write your secret to vault:
+
+<pre>
+$ ./vault_write_file /secret/yourapp/devapikey /Users/username/apikey
+Success! Data written to: secret/yourapp/devapikey
+$
+</pre>
 
 Access control policies in Vault control what a user can access.When initializing Vault, only the "root" policy is present. It gives superuser access to everything in Vault.
 
