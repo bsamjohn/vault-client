@@ -1,56 +1,29 @@
 Using Vault by HashiCorp to secure your deployment secrets
 =======================================
 
-# Installing Manually
+# Installing vault client
 
-Formal installation steps are covered by this article: [https://vaultproject.io/docs/install/](https://vaultproject.io/docs/install/)
-Run the below setup.sh script that installs vault into /opt/ folder , configures it to listen on localhost port 8200 and registers it as a service called vault-server
+Run the below vaultclient-setup.sh script to download and place the vault binary in /usr/bin folder:
 <pre>
-$git clone git@github.move.com:bsamjohn/move-vault.git
-$cd move-vault 
-$sudo ./setup.sh
+$ git clone git@github.move.com:IT-Operations/vault-client.git 
+$ cd vault-client
+$ sudo ./vaultclient-setup.sh 
 </pre>
-
+Note: This script also places an environment variable "export VAULT_ADDR='https://vault.moveaws.com'" in .bashrc, so you don't have to export it every time.
 
 # Check the installation:
-<pre>
-$vault status
-Error checking seal status: Error making API request.
-
-URL: GET http://localhost:8200/v1/sys/seal-status
-Code: 400. Errors:
-
-* server is not yet initialized
-</pre>
-Message means, that vault was installed and configured correctly, but needs to be initialized. Initialization happens once when the server is started against a new backend that has never been used with Vault before. During initialization, the encryption keys are generated, unseal keys are created, and the initial root token is setup. To initialize Vault use vault init. This is an unauthenticated request, but it only works on brand new Vaults with no data
-
-Let's init. Important influence on security has number of key shares to generate and number of key shares provided to unlock the seal.
-
-How does it work: the key used to encrypt the data is also encrypted using 256-bit AES in GCM mode. This is known as the master key. The encrypted encryption key is stored in the backend storage. The master key is then split using Shamir's Secret Sharing. Shamir's Secret Sharing ensures that no single person (including Vault) has the ability to decrypt the data. To decrypt the data, a threshold number of keys (by default three, but configurable) are required to unseal the Vault. Thesekeys are expected to be with three different places / individuals.
-
-It has full analogy to secure bank cell where one key has bank personnel and one is yours.In case of vault you might have much higher level of security.
+To verify installation, run the "vault status" command and you should see an output like the one given below:
 
 <pre>
-$cd utils
-$ ./vault_auth <Initial Root Token>
-The number of key shares to split the master key into: 1
-The number of key shares required to reconstruct the master key 1
-Key 1: a1b2c3d4e5f6g7h8j9k10l11m12n13o14p15q16r17s18t19u20v21w22x23y24z26
-Initial Root Token: 98df443c-65ee-d843-7f4b-9af8c426128a
+$ vault status
+Sealed: false
+Key Shares: 1
+Key Threshold: 1
+Unseal Progress: 0
 
-Vault initialized with 1 keys and a key threshold of 1!
-
-Please securely distribute the above keys. Whenever a Vault server
-is started, it must be unsealed with 1 (the threshold) of the
-keys above (any of the keys, as long as the total number equals
-the threshold).
-
-Vault does not store the original master key. If you lose the keys
-above such that you no longer have the minimum number (the
-threshold), then your Vault will not be able to be unsealed.
+High-Availability Enabled: false
+$
 </pre>
-
-Initial Root Token must be immediately saved in a secure location.
 
 # Using vault
 
