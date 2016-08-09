@@ -28,13 +28,12 @@ $
 ## Authorization using the token
 In order to perform any operation in vault, you should first identify yourself by providing the token that corresponds to your app's key(s) path. 
 
-Use the vault_auth command to do this by providing your token
-
 Set the VAULT_TOKEN environment variable
 <pre>
 $export VAULT_TOKEN=728c82be-1f1c-e945-1bb9-xxxxxxx
 </pre>
 
+Use the vault_auth command to do this by providing your token
 <pre>
 $ ./vault_auth 728c82be-1f1c-e945-1bb9-xxxxxxx
 vault auth -address=https://vault.moveaws.com 728c82be-1f1c-e945-1bb9-xxxxxxx
@@ -56,96 +55,36 @@ Success! Data written to: secret/yourapp/devapikey
 $
 </pre>
 
-Access control policies in Vault control what a user can access.When initializing Vault, only the "root" policy is present. It gives superuser access to everything in Vault.
-
-As we plan to store secrets for saying multiple projects, we should be able to clearly separate access to secrets that belong to different projects. And this is where policies do their job.
-
-
-Policies in Vault are formatted with HCL. HCL is a human-readable configuration format that is also JSON-compatible, so you can use JSON as well. An example policy is shown below:
-
-<pre>
-path "secret/project/name" {
-  policy = "read"
-}
-</pre>
-
-It specify path, like we have in some tree structure, wildcards are supported.
-If you provide access to specific part of the tree, you also provide the same access to all subnodes, unless you override it.
-
-Policy is registered with *policy-write* command
-<pre>
-./vault_ policy-write demo demo.hcl
-vault policy-write -address=http://localhost:8200 demo demo.hcl
-Policy 'demo' written.
-</pre>
-
-## Deployment tokens
-
-Now it is time to create deployment token. In our case, this is token that would allow us to read the secret deployment value from vault, and does not have any additional privileges except this.
-
-In order to do so, we are using creating token with policy command
-
-<pre>
-./vault_create_token_with_policy demo
-vault token-create -address=http://localhost:8200 -policy=demo
-4d79adad-a4ec-de8b-3f85-5467b3e8536a
-</pre>
-
-
-## Storing data
-
-Now it is time to store some secrets for deployment. For purposes of the demo, let it be some api key and private key used for deployment.
-
-Command write is used to write the secrets
-<pre>
-./vault_write secret/project/name/apikey BLABLABLA
-vault write -address=http://localhost:8200 secret/project/name/apikey value=BLABLABLA
-Success! Data written to: secret/project/name/apikey
-
-./vault_write_file secret/project/name/id_rsa ./demo_rsa
-Success! Data written to: secret/project/name/id_rsa
-</pre>
-
-### Important
-Binary file storing is not supported as for now, but you always can store base64 encoded file, like the MIME attachments are stored in mails.
-Fortunately, for most deployments we have api keys and private keys that are text files.
-
-## Retrieving the data
+## Read your secret!
 
 There are two ways to access your data.
 First is using vault client itself
 
 <pre>
-./vault_read secret/project/name/apikey
-vault read -address=http://localhost:8200 secret/project/name/apikey
+./vault_read secret/yourapp/devapikey
+vault read -address=https://vault.moveaws.com secret/yourapp/devapikey
 Key            	Value
-lease_id       	secret/project/name/apikey/a74dd189-de4b-1c98-ba24-6b29258c511b
+lease_id       	secret/yourapp/devapikey/xxxxxx-xxx-xxx-x-xxxxxxx
 lease_duration 	2592000
 lease_renewable	false
 value          	BLABLABLA
 
-./vault_read secret/project/name/id_rsa
-vault read -address=http://localhost:8200 secret/project/name/id_rsa
+./vault_read secret/yourapp/devapikey/id_rsa
+vault read -address=https://vault.moveaws.com secret/yourapp/devapikey/id_rsa
 Key            	Value
-lease_id       	secret/project/name/id_rsa/204ba657-9648-4fa5-8f82-ede992a054b4
+lease_id       	secret/yourapp/devapikey/id_rsa/xxxxxx-xxx-xxx-x-xxxxxxx
 lease_duration 	2592000
 lease_renewable	false
 value          	-----BEGIN RSA PRIVATE KEY-----
-MIIEpgIBAAKCAQEApiLCR2sgf5unedMk1a2maL22PsoPwQWpGTDFZgCvhSVWvnBs
+MIIEpgIBAAKCAQEApiLCR2sgf5dMk1a2maL22PsoPwQWpGTDFZgCvhSVWvnBs
 ...
 </pre>
 
-second is using http based API. For that scenario you will need to authorize via deployment token we allocated previously.
+The second method is using http based API. For that scenario you will need to authorize via deployment token we allocated previously.
 <pre>
-./vault_curl 4d79adad-a4ec-de8b-3f85-5467b3e8536a secret/project/name/apikey
+./vault_curl 728c82be-1f1c-e945-1bb9-xxxxxxx secret/yourapp/devapikey
 curl -H X-Vault-Token: 4d79adad-a4ec-de8b-3f85-5467b3e8536a -X GET http://localhost:8200/v1/secret/project/name/apikey
-{"lease_id":"secret/project/name/apikey/2189c6c4-1fa7-0f4d-2598-bded29a4ce6b","renewable":false,"lease_duration":2592000,"data":{"value":"BLABLABLA"},"auth":null}
-
-./vault_curl 4d79adad-a4ec-de8b-3f85-5467b3e8536a secret/project/name/id_rsa
-curl -H X-Vault-Token: 4d79adad-a4ec-de8b-3f85-5467b3e8536a -X GET http://localhost:8200/v1/secret/project/name/id_rsa
-{"lease_id":"secret/project/name/id_rsa/ec509e1f-09a7-6aee-54e2-f3364720c7de","renewable":false,"lease_duration":2592000,"data":{"value":"-----BEGIN RSA PRIVATE KEY-----\nMIIEpgI......-----END RSA PRIVATE KEY-----"},"auth":null}
-</pre>
-
+{"lease_id":"secret/yourapp/devapikey/xxxxxx-xxx-xxx-x-xxxxxxx","renewable":false,"lease_duration":2592000,"data":{"value":"BLABLABLA"},"auth":null}
 
 # Handy Commands 
 
