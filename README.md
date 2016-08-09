@@ -85,6 +85,7 @@ The second method is using http based API. For that scenario you will need to au
 ./vault_curl 728c82be-1f1c-e945-1bb9-xxxxxxx secret/yourapp/devapikey
 curl -H X-Vault-Token: 4d79adad-a4ec-de8b-3f85-5467b3e8536a -X GET http://localhost:8200/v1/secret/project/name/apikey
 {"lease_id":"secret/yourapp/devapikey/xxxxxx-xxx-xxx-x-xxxxxxx","renewable":false,"lease_duration":2592000,"data":{"value":"BLABLABLA"},"auth":null}
+</pre>
 
 # Handy Commands 
 
