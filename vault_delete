@@ -3,7 +3,7 @@
 export VAULT_ADDR='https://vault.moveaws.com'
 
 if [ -z "$1" ]; then 
-  echo "Plese provide key to delete as a param in form  secret/project/keyname"
+  echo "Plese provide key as a param in form  secret/project/keyname"
   exit 1
 fi
 echo "vault delete -address=$VAULT_ADDR $1"
