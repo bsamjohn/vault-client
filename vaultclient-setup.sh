@@ -12,8 +12,10 @@ fi
 
 if [ "$OSUNAME" = "Linux" ]; then
   OS=linux
+  BINDIR=/usr/bin
 else
   OS=darwin
+  BINDIR=/usr/local/bin
 fi
 
 if [ "$(id -u)" != "0" ]; then
@@ -24,10 +26,10 @@ fi
 
 echo "Downloading Vault and install..."
 curl -L "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip" > /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip
-unzip /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip -d /usr/bin
+unzip /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip -d $BINDIR
 #rm /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip
-chmod 0755 /usr/bin/vault
-chown root:wheel /usr/bin/vault
+chmod 0755 $BINDIR/vault
+chown root:wheel $BINDIR/vault
 echo "Done"
 
 echo "Setting VAULT_ADDR variable to .bashrc...."
