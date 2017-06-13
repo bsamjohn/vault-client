@@ -23,7 +23,6 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-
 echo "Downloading Vault and install..."
 curl -L "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip" > /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip
 unzip /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip -d $BINDIR
