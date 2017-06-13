@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VAULT_VERSION="0.6.0"
+VAULT_VERSION="0.7.3"
 HWUNAME=$(uname -m)
 OSUNAME=$(uname -s)
 
@@ -27,7 +27,7 @@ fi
 echo "Downloading Vault and install..."
 curl -L "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip" > /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip
 unzip /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip -d $BINDIR
-#rm /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip
+rm -f /tmp/vault_${VAULT_VERSION}_${OS}_${PLATFORM}.zip
 chmod 0755 $BINDIR/vault
 chown root:wheel $BINDIR/vault
 echo "Done"
@@ -36,4 +36,4 @@ echo "Setting VAULT_ADDR variable to .bashrc...."
 echo "export VAULT_ADDR='https://vault.moveaws.com'" >> ~/.bashrc
 export VAULT_ADDR="https://vault.moveaws.com"
 echo "INFO: Run the command: export VAULT_ADDR='https://vault.moveaws.com' "
-echo "INFO: Run the command: export VAULT_TOKEN=<xxxx-xxxxx-xxxxx> to set the token" 
+echo "INFO: Run the command: export VAULT_TOKEN=<xxxx-xxxxx-xxxxx> to set the token"
