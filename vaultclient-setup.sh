@@ -35,4 +35,4 @@ echo "Setting VAULT_ADDR variable to .bashrc...."
 echo "export VAULT_ADDR='https://vault.moveaws.com'" >> ~/.bashrc
 export VAULT_ADDR="https://vault.moveaws.com"
 echo "INFO: Run the command: export VAULT_ADDR='https://vault.moveaws.com' "
-echo "INFO: Run the command: export VAULT_TOKEN=<xxxx-xxxxx-xxxxx> to set the token"
+echo "INFO: Run the command: export VAULT_AUTH_GITHUB_TOKEN=<xxxx-xxxxx-xxxxx> to set the github token"
