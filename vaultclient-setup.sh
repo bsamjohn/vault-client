@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VAULT_VERSION="0.7.3"
+VAULT_VERSION="0.9.1"
 HWUNAME=$(uname -m)
 OSUNAME=$(uname -s)
 
