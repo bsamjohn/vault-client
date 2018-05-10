@@ -25,33 +25,33 @@ $
 
 # Using vault
 
-## Authorization using the token
+## Authorization using the okta
 In order to perform any operation in vault, you should first identify yourself by providing the token that corresponds to your app's key(s) path. 
 
-Set the VAULT_TOKEN environment variable
+Set the VAULT_ADDR environment variable
 <pre>
-$export VAULT_TOKEN=728c82be-1f1c-e945-1bb9-xxxxxxx
+$export VAULT_ADDR=https://vault.moveaws.com
 </pre>
 
-Use the vault_auth command to do this by providing your token
+Use the vault auth command
 <pre>
-$ ./vault_auth 728c82be-1f1c-e945-1bb9-xxxxxxx
-vault auth -address=https://vault.moveaws.com 728c82be-1f1c-e945-1bb9-xxxxxxx
+$ vault auth --method=okta username=bsamjohn
+Password (will be hidden): youroktatoken
 Successfully authenticated! You are now logged in.
-token: 728c82be-1f1c-e945-1bb9-xxxxxxx
-token_duration: 2591592
+The token below is already saved in the session. You do not
+need to "vault auth" again with the token.
+token: xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx
+token_duration: 2764799
 token_policies: [default, yourapp]
 </pre>
-
-Note: If you are a first time user and don't have a token, contact any of the admins of your github group listed in this wiki page(TODO: define the policy), and provide them the name of your app. They would create a policy which gives you access to your app secret path (/secret/yourapp) and give you the token that has access to that secret path. 
 
 ## Write to vault 
 
 Assuming that you now that you have authenticated with a token that has write access to your secret path, you can issue the below command to write your secret to vault:
 
 <pre>
-$ ./vault_write_file /secret/yourapp/devapikey /Users/username/apikey
-Success! Data written to: secret/yourapp/devapikey
+$ ./vault_write_file /secret/girthuborg/yourapp/dev/somesecret /Users/username/secretvaluefile
+Success! Data written to: /secret/girthuborg/yourapp/dev/somesecret
 $
 </pre>
 
@@ -62,9 +62,9 @@ First is using vault client itself
 
 <pre>
 ./vault_read secret/yourapp/devapikey
-vault read -address=https://vault.moveaws.com secret/yourapp/devapikey
+vault read -address=https://vault.moveaws.com /secret/girthuborg/yourapp/dev/somesecret
 Key            	Value
-lease_id       	secret/yourapp/devapikey/xxxxxx-xxx-xxx-x-xxxxxxx
+lease_id       	secret/girthuborg/yourapp/dev/somesecret/xxxxxx-xxx-xxx-x-xxxxxxx
 lease_duration 	2592000
 lease_renewable	false
 value          	BLABLABLA
